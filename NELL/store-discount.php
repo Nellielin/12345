@@ -25,8 +25,8 @@ switch ($ordertype) {
   
 }
 
-$sql = "SELECT * FROM discount WHERE valid= 1 AND category_id=3";
-$sql .= $category ? " AND category_id = $category " : "";
+$sql = "SELECT * FROM discount_store WHERE valid= 1";
+// $sql .= $category ? " AND category_id = $category " : "";
 $sql .= $valid ? " AND buyer_valid = $valid " : "";
 $sql .= $ordertype ? " ORDER BY $ordertype" : "";
 $pageUserCount = $conn->query($sql)->num_rows;
@@ -155,7 +155,7 @@ $result = $conn->query($sql);
       <ul class="pagination">
         <?php for ($i = 1; $i <= $totalPage; $i++) : ?>
           <li class="page-item
-    <?php if ($page == $i) echo "active"; ?>"><a class="page-link" href="discounts.php?page=<?= $i ?>&ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>"><?= $i ?></a></li>
+    <?php if ($page == $i) echo "active"; ?>"><a class="page-link" href="store-discount.php?page=<?= $i ?>&ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>"><?= $i ?></a></li>
         <?php endfor; ?>
       </ul>
     </nav>
