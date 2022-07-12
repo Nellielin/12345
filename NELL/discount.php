@@ -39,32 +39,31 @@ $userCount = $result->num_rows;
 
             <table class="table">
                 <tr>
-                    <th>Id</th>
+                    <th>優惠券No.</th>
                     <td><?= $row["id"] ?></td>
                 </tr>
                 <tr>
-                    <th>Name1111111
-                    </th>
+                    <th>優惠券名稱</th>
                     <td><?= $row["name"] ?></td>
                 </tr>
                 <tr>
-                    <th>Description</th>
+                    <th>優惠券簡述</th>
                     <td><?= $row["description"] ?></td>
                 </tr>
                 <tr>
-                    <th>Amount</th>
+                    <th>庫存數量</th>
                     <td><?= $row["amount"] ?></td>
                 </tr>
                 <tr>
-                    <th>Discount number</th>
+                    <th>折扣數字</th>
                     <td><?= $row["discount_number"] ?></td>
                 </tr>
                 <tr>
-                    <th>Discount code</th>
+                    <th>優惠序號</th>
                     <td><?= $row["discount_code"] ?></td>
                 </tr>
                 <tr>
-                    <th>Lower Limit</th>
+                    <th>最低使用金額</th>
                     <td><?php
                         if ($row["lower_limit"] == 0) {
                             echo "未設定";
@@ -73,21 +72,11 @@ $userCount = $result->num_rows;
                         } ?></td>
                 </tr>
                 <tr>
-                    <th>Upper Limit</th>
-                    <td>
-                        <?php
-                        if ($row["upper_limit"] == 0) {
-                            echo "未設定";
-                        } else {
-                            echo $row["upper_limit"];
-                        } ?></td>
-                </tr>
-                <tr>
-                    <th>Start time</th>
+                    <th>啟用日期</th>
                     <td><?= $row["start_time"] ?></td>
                 </tr>
                 <tr>
-                    <th>End time</th>
+                    <th>失效日期</th>
                     <td><?= $row["end_time"] ?></td>
                 </tr>
                 <th>狀態</th>
