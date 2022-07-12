@@ -4,7 +4,7 @@ require("../db-connect.php");
 $page = isset($_GET["page"]) ?  $page = $_GET["page"] : 1;
 $perPage = 10;
 $start = ($page - 1) * $perPage;
-$category = isset($_GET["category"]) && !empty($_GET["category"]) ? $_GET["category"] : "";
+$category = isset($_GET["category"]) && !empty($_GET["category"]) && $_GET["category"] ? $_GET["category"] : "";
 $valid  = isset($_GET["valid"]) ? $_GET["valid"] : "";
 
 $ordertype = isset($_GET["order"]) ? $_GET["order"] : 1;
@@ -17,16 +17,16 @@ switch ($ordertype) {
     $ordertype = "id DESC";
     break;
   case 3:
-    $ordertype = "name ASC";
+    $ordertype = "discount_number ASC";
     break;
   case 4:
-    $ordertype = "name DESC";
+    $ordertype = "discount_number DESC";
     break;
 }
 
 $sql = "SELECT * FROM discount WHERE valid= 1";
 // $sql .= $storeID ? " and store_id = $storeID" : "";
-$sql .= $category ? " AND category_id = $category " : "";
+$sql .= $category  ? " AND category_id = $category " : "";
 $sql .= $valid ? " AND buyer_valid = $valid " : "";
 $sql .= $ordertype ? " ORDER BY $ordertype" : "";
 $pageUserCount = $conn->query($sql)->num_rows;
@@ -105,7 +105,10 @@ $result = $conn->query($sql);
       color: #222934;
       background-color: #FFC845;
     }
-
+    .detail{
+      
+      text-decoration: none;
+    }
     .detailBtn {
       color: #222934;
       background-color: #D5EEEE;
@@ -201,10 +204,10 @@ $result = $conn->query($sql);
 <body>
   <div class="col-12 row d-flex justify-content-between btn-group align-items-center">
     <!-- <div id="searchbykey" style="display:block"> -->
-    <form action="discounts.php" method="get" class="col-6">
+    <form action="discount-search.php" method="get" class="col-6">
       <div class="col-4 d-flex keywordBar ms-4">
-        <input type="text" class="col-2 form-control " name="keyword" placeholder="輸入關鍵字">
-        <input type="hidden" name="type" value="<?= $type ?>" />
+        <input type="text" class="col-2 form-control " name="search" placeholder="輸入關鍵字">
+        <!-- <input type="hidden" name="search" value="<?= $type ?>" /> -->
         <button class="col-3 btn mx-2 filterBtn" type="submit">搜尋</button>
       </div>
     </form>
@@ -219,10 +222,10 @@ $result = $conn->query($sql);
     </div>
   </div> -->
     <div class="col-5 row d-flex justify-content-end btn-group align-items-center ">
-      <a class="col-2 orderBtn" href="allProductList.php?type=<?= $type ?>&keyword=<?= $keyword ?>&minPrice=<?= $minPrice ?>&maxPrice=<?= $maxPrice ?>&startDate=<?= $startDate ?>&endDate=<?= $endDate ?>&order=1" class="orderBtn <?php if ($order == 1) echo "active" ?>" name="priceOrder ASC">單價↑</a>
-      <a class="col-2 orderBtn" href="allProductList.php?type=<?= $type ?>&keyword=<?= $keyword ?>&minPrice=<?= $minPrice ?>&maxPrice=<?= $maxPrice ?>&startDate=<?= $startDate ?>&endDate=<?= $endDate ?>&order=2" class="orderBtn <?php if ($order == 2) echo "active" ?>" name="priceOrder DESC">單價↓</a>
-      <a class="col-2 orderBtn" href="allProductList.php?type=<?= $type ?>&keyword=<?= $keyword ?>&minPrice=<?= $minPrice ?>&maxPrice=<?= $maxPrice ?>&startDate=<?= $startDate ?>&endDate=<?= $endDate ?>&order=3" class="orderBtn <?php if ($order == 3) echo "active" ?>" name="launchOrder ASC">上架時間↑</a>
-      <a class="col-2 orderBtn" href="allProductList.php?type=<?= $type ?>&keyword=<?= $keyword ?>&minPrice=<?= $minPrice ?>&maxPrice=<?= $maxPrice ?>&startDate=<?= $startDate ?>&endDate=<?= $endDate ?>&order=4" class="orderBtn <?php if ($order == 4) echo "active" ?>" name="launchOrder DESC">上架時間↓</a>
+      <a class="col-2 orderBtn" href="discounts.php?ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>&order=1" class="orderBtn <?php if ($order == 1) echo "active" ?>" name="id ASC">創建時間↑</a>
+      <a class="col-2 orderBtn" href="discounts.php?ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>&order=2" class="orderBtn <?php if ($order == 2) echo "active" ?>" name="id DESC">創建時間↓</a>
+      <a class="col-2 orderBtn" href="discounts.php?ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>&order=3" class="orderBtn <?php if ($order == 3) echo "active" ?>" name="discount_number ASC">折扣價格↑</a>
+      <a class="col-2 orderBtn" href="discounts.php?ordertype=<?= $ordertype ?>&category=<?= $category ?>&valid=<?= $valid ?>&order=4" class="orderBtn <?php if ($order == 4) echo "active" ?>" name="discount_number DESC">折扣價格↓</a>
     </div>
   </div>
 
@@ -236,7 +239,7 @@ $result = $conn->query($sql);
       <a href="discounts.php?valid=<?= $valid ?>&category=<?= $category ?>&order=4" class="btn btn-primary <?php if ($ordertype == 4) echo "active" ?>">name <i class="fa-solid fa-arrow-down-z-a"></i></a>
     </div>
   </div> -->
-  <!-- <ul class="nav nav-pills">
+  <ul class="nav nav-pills">
     <li class="nav-item">
       <a class="nav-link  <?php
                           if ($category == "") echo "active";
@@ -252,7 +255,7 @@ $result = $conn->query($sql);
                           if ($_GET['category'] == "2") echo "active";
                           ?>" aria-current="page" href="discounts.php?ordertype=<?= $ordertype ?>&valid=<?= $valid ?>&category=2">現金折價券</a>
     </li>
-  </ul> -->
+  </ul>
 
   <div class="countBox d-flex justify-content-end mt-3">
     <?php if ($pageUserCount > 0) : ?>
@@ -304,10 +307,9 @@ $result = $conn->query($sql);
               <?php
               if ($row["category_id"] == 1) {
                 echo "%數折扣券";
-              } elseif ($row["category_id"] == 2) {
+              } 
+              if ($row["category_id"] == 2) {
                 echo "現金折扣券";
-              } else {
-                echo "商家優惠活動";
               }
               ?></td>
             <td class="align-middle text-center col-2"><?php echo $row["name"] ?></td>
@@ -324,10 +326,14 @@ $result = $conn->query($sql);
                                                     echo "有效<br>";
                                                   } ?>
             </td>
-            <!-- <td class="align-middle text-center"><a class="btn btn-info" href="discount.php?id=<?= $row["id"] ?>">查看</a></td> -->
             <td class="align-middle text-center">
-              <button type="button" class="btn detailBtn" onclick="window.location.href='discount.php?store_id=<?= $storeID ?>&id=<?= $row['id'] ?>'">查看</button>
+            <button type="button" class="btn detailBtn">
+              <a class="detail" href="discount.php?id=<?= $row["id"] ?>">查看</a>
+            </button>
             </td>
+            <!-- <td class="align-middle text-center">
+              <button type="button" class="btn detailBtn" href="discount.php?id=<?= $row["id"] ?>">查看
+            </td> -->
           </tr>
         <?php endwhile; ?>
       </tbody>
