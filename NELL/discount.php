@@ -43,7 +43,8 @@ $userCount = $result->num_rows;
                     <td><?= $row["id"] ?></td>
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>Name1111111
+                    </th>
                     <td><?= $row["name"] ?></td>
                 </tr>
                 <tr>
